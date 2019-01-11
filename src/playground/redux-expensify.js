@@ -1,7 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import uuid from 'uuid';
 
-//actions genererators
+// expenses actions genererators
 const addExpense = (
   { description = '',
     note = '',
@@ -38,6 +38,21 @@ const removeExpense = (
   }
 });
 
+const editExpense = (id, updates) => ({
+  type: 'EDIT_EXPENSE',
+  id,
+  updates
+})
+
+//filters action generators
+
+const setTextFilter = (text = '') => ({
+  type: 'SET_TEXT_FILTER',
+  text
+})
+
+
+
 
 // Expenses Reducer
 const expensesReducerDefaultState = [];
@@ -56,6 +71,17 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
       //return state.concat(action.expense)
       //console.log (state.indexOf(action.expense))
       return state.filter(({ id }) => id !== action.expense.id);
+    case 'EDIT_EXPENSE':
+      return state.map((expense) => {
+        if (expense.id === action.id) {
+          return {
+            ...expense, //taking old object
+            ...action.updates //overrading old variable inside object
+          }
+        } else {
+          return expense;
+        }
+      });
     default:
       return state;
   }
@@ -70,6 +96,11 @@ const filtersReducerDefaultState = {
 
 const filtersReducer = (state = filtersReducerDefaultState, action) => {
   switch (action.type) {
+    case 'SET_TEXT_FILTER':
+      return {
+        ...state,
+        text: action.text
+      }
     default:
       return state;
   }
@@ -89,9 +120,12 @@ store.subscribe(() => {
 const addOne = store.dispatch(addExpense({ description: 'Rent', amount: 100 }));
 const addSecond = store.dispatch(addExpense({ description: 'Coffee', amount: 300 }));
 
-store.dispatch(removeExpense({ id: store.getState().expenses[0].id }));
+//store.dispatch(removeExpense({ id: store.getState().expenses[0].id }));
+store.dispatch(removeExpense({ id: addOne.expense.id }));
+store.dispatch(editExpense( addSecond.expense.id  , { amount: 500 }));
 
-
+store.dispatch(setTextFilter( 'rent' ))
+store.dispatch(setTextFilter())
 
 const demoState = {
   expenses: [{
@@ -108,3 +142,13 @@ const demoState = {
     endDate: undefined
   }
 };
+
+const user = {
+  name: 'Jen',
+  age: 24
+};
+
+console.log({
+  ...user,
+  shit: 'shit'
+});
