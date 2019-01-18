@@ -142,6 +142,18 @@ const filtersReducer = (state = filtersReducerDefaultState, action) => {
       return state;
   }
 };
+
+//Get visible expenses
+const getVisibleExpenses = (expenses, {text, sortBy, startDate, endDate}) => {
+  return expenses.filter((expense) => {
+    const startDateMatch = typeof startDate !== 'number' || expense.createdAt >= startDate;
+    const endDateMatch = typeof endDate !== 'number' || expense.createdAt <= endDate;
+    const textMatch = expense.description.toLowerCase().includes(text.toLowerCase());
+    return startDateMatch && endDateMatch && textMatch;
+  })
+};
+
+
 //Store creation
 const store = createStore(
   combineReducers({
@@ -151,25 +163,27 @@ const store = createStore(
 );
 //console.log every time when there is a change
 store.subscribe(() => {
-  console.log(store.getState());
+  const state = store.getState();
+  const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
+  console.log(visibleExpenses);
 });
 
-const addOne = store.dispatch(addExpense({ description: 'Rent', amount: 100 }));
-const addSecond = store.dispatch(addExpense({ description: 'Coffee', amount: 300 }));
-
-//store.dispatch(removeExpense({ id: store.getState().expenses[0].id }));
-store.dispatch(removeExpense({ id: addOne.expense.id }));
-store.dispatch(editExpense( addSecond.expense.id  , { amount: 500 }));
+const addOne = store.dispatch(addExpense({ description: 'Rent', amount: 100, createdAt: 100 }));
+const addSecond = store.dispatch(addExpense({ description: 'Coffee', amount: 300, createdAt: 300 }));
+//
+// //store.dispatch(removeExpense({ id: store.getState().expenses[0].id }));
+// store.dispatch(removeExpense({ id: addOne.expense.id }));
+// store.dispatch(editExpense( addSecond.expense.id  , { amount: 500 }));
 
 store.dispatch(setTextFilter( 'rent' ));
-store.dispatch(setTextFilter());
-
-store.dispatch(sortByAmount());
-store.dispatch(sortByDate());
-
-store.dispatch(setStartDate(125));
-store.dispatch(setStartDate());
-store.dispatch(setEndDate(1250));
+// store.dispatch(setTextFilter());
+//
+// store.dispatch(sortByAmount());
+// store.dispatch(sortByDate());
+//
+ store.dispatch(setStartDate(100));
+// store.dispatch(setStartDate());
+ store.dispatch(setEndDate(300));
 
 const demoState = {
   expenses: [{
@@ -186,7 +200,7 @@ const demoState = {
     endDate: undefined
   }
 };
-
+/*
 const user = {
   name: 'Jen',
   age: 24
@@ -196,3 +210,4 @@ console.log({
   ...user,
   shit: 'shit'
 });
+*/
