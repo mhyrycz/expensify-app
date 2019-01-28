@@ -8,24 +8,18 @@ export default class ExpenseForm extends React.Component {
     amount: '',
   };
 
-  // 3 different methods of return objects 
   onDescriptionChange = (e) => {
     const description = e.target.value
     this.setState(() => ({ description }))
   }
   onNoteChange = (e) => {
     const note = e.target.value // e.target.value can't be directly assigned in setState for note.
-    this.setState({ note: note })
+    this.setState(() => ({ note }))
   }
   onAmountChange = (e) => {
     const amount = e.target.value
     if (amount.match(/^\d*(\.\d{0,2})?$/)) {
-      this.setState(() => {
-          return {
-            amount: amount
-          }
-        }
-      )
+      this.setState(() => ({ amount }))
     }
   }
   render() {
