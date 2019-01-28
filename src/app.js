@@ -13,14 +13,14 @@ const store = configureStore();
 
 store.subscribe(() => {
   const state = store.getState();
-  console.log(expensesSelector(state.expenses, state.filters));
+  console.log(store.getState());
 });
 
 
-const addOne = store.dispatch(addExpense({ description: 'Water bill', amount: 100, createdAt: 200 }));
+const addOne = store.dispatch(addExpense({ description: 'Water bill', amount: 4006, createdAt: 200 }));
 const addSecond = store.dispatch(addExpense({ description: 'Gas bill', amount: 400, createdAt: 300 }));
-const addThird = store.dispatch(addExpense({ description: 'Rent', amount: 4006, createdAt: 400 }));
-const addTextFilter = store.dispatch(setTextFilter( 'bill' ));
+const addThird = store.dispatch(addExpense({ description: 'Rent', amount: 100, createdAt: 400 }));
+//const addTextFilter = store.dispatch(setTextFilter( 'bill' ));
 
 
 const jsx = (
