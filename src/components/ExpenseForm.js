@@ -27,12 +27,14 @@ export default class ExpenseForm extends React.Component {
   }
   onAmountChange = (e) => {
     const amount = e.target.value
-    if (amount.match(/^\d*(\.\d{0,2})?$/)) {
+    if (!amount || amount.match(/^\d{1,}(\.\d{0,2})?$/)) { // !amount it allows user to delete date by delete (empty script)  
       this.setState(() => ({ amount }))
     }
   }
   onDateChange = (createdAt) => {
-    this.setState(() => ({ createdAt }));
+    if (createdAt) { // it prevents user to delete date by delete
+      this.setState(() => ({ createdAt }));
+    }
   }
   onFocusChange = ({ focused }) => {
     this.setState(() => ({ calendarFocused: focused }));
