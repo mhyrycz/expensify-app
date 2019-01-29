@@ -27,7 +27,7 @@ export default class ExpenseForm extends React.Component {
   }
   onAmountChange = (e) => {
     const amount = e.target.value
-    if (!amount || amount.match(/^\d{1,}(\.\d{0,2})?$/)) { // !amount it allows user to delete date by delete (empty script)  
+    if (!amount || amount.match(/^\d{1,}(\.\d{0,2})?$/)) { // !amount it allows user to delete date by delete (empty script)
       this.setState(() => ({ amount }))
     }
   }
@@ -39,11 +39,26 @@ export default class ExpenseForm extends React.Component {
   onFocusChange = ({ focused }) => {
     this.setState(() => ({ calendarFocused: focused }));
   }
+  onSubmit = (e) => {
+    e.preventDefault(); //disallowing refresh on submit
+    if (!this.state.description || !this.state.amount) {
+      this.setState(() => ({ error: 'Please provide description and amount' }));
+    } else {
+      this.setState(() => ({ error: '' }));
+      this.props.onSubmit({ // sending to props
+        description: this.state.description,
+        amount: parseFloat(this.state.amount, 10) * 100, //parse to float
+        createdAt: this.state.createdAt.valueOf(), // createdAt is a momet object, need to parse to timestamp
+        note: this.state.note
+      });
+    }
+  }
 
   render() {
     return (
       <div>
-        <form>
+        {this.state.error && <p>{this.state.error}</p>}
+        <form onSubmit={this.onSubmit}>
           <input
             type="text"
             placeholder="Description"

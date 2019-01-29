@@ -13,19 +13,20 @@ const ExpenseListFilters = (props) => (
         if (e.target.value === 'date') {
           props.dispatch(sortByDate())
         } else if (e.target.value === 'amount') {
-          props.dispatch(sortByAmount())
+          props.dispatch(sortByAmount()) // dispatch is in props
         }
       }}
     >
       <option value="date">Date</option>
       <option value="amount">Amount</option>
     </select>
+  {  console.log(props)}
   </div>
 )
 
 const mapStateToProps = (state) => {
   return{
-    filters: state.filters
+    filters: state.filters //check why state is available here ?
   }
 }
-export default connect(mapStateToProps)(ExpenseListFilters);
+export default connect(mapStateToProps)(ExpenseListFilters); //store connected to component
